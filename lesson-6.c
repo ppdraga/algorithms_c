@@ -61,14 +61,14 @@ Node* newNode(T value, Node* parent) {
     return tmp;
 }
 
-void insert(Node* head, T value) {
+void insert(Node** head, T value) {
     Node* tmp = NULL;
-    if (head == NULL) {
-        head = newNode(value, NULL);
+    if (*head == NULL) {
+        *head = newNode(value, NULL);
         return;
     }
 
-    tmp = head;
+    tmp = *head;
     while (tmp) {
         if (value > tmp->data) {
             if (tmp->right) {
@@ -118,7 +118,7 @@ int main(int argc, const char *argv[]) {
         int value;
         fscanf(file, "%d", &value);
         printf("read value %d\n", value);
-        insert(tree, value);
+        insert(&tree, value);
     }
 
     printTree(tree);
