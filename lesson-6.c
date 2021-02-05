@@ -53,6 +53,39 @@ void printTree(Node* root) {
     }
 }
 
+
+void printIndent(int n) {
+    for (int i = 0; i < n; i++) {
+        printf("  ");
+    }
+}
+
+int indent = 0;
+void printTree2(Node* root) {
+    if (root) {
+        printIndent(indent);
+        printf("%d\n", root->data);
+        if (root->left || root->right) {
+            
+            indent++;
+            if (root->left) {
+                printTree2(root->left);
+            } else {
+                printIndent(indent);
+                printf("NULL\n");
+            }
+
+            if (root->right) {
+                printTree2(root->right);
+            } else {
+                printIndent(indent);
+                printf("NULL\n");
+            }
+            indent--;
+        }
+    }
+}
+
 Node* newNode(T value, Node* parent) {
     Node* tmp = (Node*) malloc(sizeof(Node));
     tmp->left = tmp->right = NULL;
@@ -94,16 +127,45 @@ void insert(Node** head, T value) {
 
 void preOrderTravers(Node* root) {
     if (root) {
-        printf("%d", root->data);
+        printf("%3d", root->data);
         preOrderTravers(root->left);
         preOrderTravers(root->right);
     }
 }
 
+void preOrderTravers2(Node* root) {
+    if (root) {
+        preOrderTravers2(root->left);
+        printf("%3d", root->data);
+        preOrderTravers2(root->right);
+    }
+}
+
+
+Node* searchNode(T value, Node* root) {
+    if (value == root->data) {
+        return root;
+    } else if (value < root->data) {
+        if (root->left) {
+            return searchNode(value, root->left);
+        } else {
+            return NULL;
+        }
+    } else {
+        if (root->right) {
+            return searchNode(value, root->right);
+        } else {
+            return NULL;
+        }
+    }
+}
+
+
+
 int main(int argc, const char *argv[]) {
 
     char* string = "Some string";
-    printf("'%s' has checksum %d \n", string, hashCalc(string));
+    printf("'%s' has checksum %d \n\n", string, hashCalc(string));
 
 
     Node* tree = NULL;
@@ -117,12 +179,47 @@ int main(int argc, const char *argv[]) {
     for(int i = 0; i < count; i++) {
         int value;
         fscanf(file, "%d", &value);
-        printf("read value %d\n", value);
+        // printf("read value %d\n", value);
         insert(&tree, value);
     }
 
+    //Печать деревьев:
     printTree(tree);
+    printf("\n");
+    printTree2(tree);
+    printf("\n");
+
+
+    // Обход деревьев:
+    printf("\n");
+    preOrderTravers(tree);
+    printf("\n");
+    preOrderTravers2(tree);
+    printf("\n");
+    printf("\n");
+
+
+    // Поиск узла:
+    Node* node7;
+    int value = 7;
+    node7 = searchNode(value, tree);
+    if (node7) {
+        printf("Found Node at %p with value %d\n", node7, node7->data);
+    } else {
+        printf("Could not find Node with value %d\n", value);
+    }
+
+    value = 100;
+    Node* nodeNull;
+    nodeNull = searchNode(value, tree);
+    if (nodeNull) {
+        printf("Found Node at %p with value %d\n", nodeNull, nodeNull->data);
+    } else {
+        printf("Could not find Node with value %d\n", value);
+    }
 
     fclose(file);
     return 0;
 }
+
+
