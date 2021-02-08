@@ -60,6 +60,40 @@ void printQ(Queue* q) {
 
 // Bliznyuk Yaroslav
 // 2. Написать рекурсивную функцию обхода графа в глубину.
+
+void graphTraversDeep(int graph[7][7], int startNode) {
+    // Начальный статус вершин 0 
+    // (необнаруженная и не посещенная - 0, обнаруженная - 1, посещенная - 2)
+    int nodes[7] = {0, 0, 0, 0, 0, 0, 0};
+
+    boolean isTraversed() {
+        for(int i = 0; i < 7; i++) {
+            if (nodes[i] == 0) {
+                return False;
+            }
+        }
+        return True;
+    }
+
+    void visit(int node) {
+        printf("%d - ", node + 1);
+        nodes[node] = 1;
+        // Ищем смежные вершины
+        for(int i = 0; i < 7; i++) {
+            if (graph[node][i] == 1 && nodes[i] == 0) {
+                // Посещаем смежные вершины
+                visit(i);
+                if (!isTraversed())
+                    printf("back to %d - ", i + 1);
+            }
+        }
+        // Помечаем вершину как посещенную
+        nodes[node] = 2;
+    }
+
+    visit(startNode - 1);
+}
+
 // 3. Написать функцию обхода графа в ширину.
 void graphTraversWidth(int graph[7][7], int startNode) {
     Queue* q;
@@ -67,7 +101,7 @@ void graphTraversWidth(int graph[7][7], int startNode) {
     init(q);
 
     // Начальный статус вершин 0 
-    // (необнаруженная - 0, обнаруженная волной - 1, посещенная - 2)
+    // (необнаруженная и не посещенная - 0, обнаруженная волной - 1, посещенная - 2)
     int nodes[7] = {0, 0, 0, 0, 0, 0, 0}; 
 
     // Помещаем в очередь первую вершину
@@ -89,10 +123,6 @@ void graphTraversWidth(int graph[7][7], int startNode) {
         }
     }
 }
-
-
-
-
 
 
 int main(int argc, const char *argv[]) {
@@ -119,8 +149,9 @@ int main(int argc, const char *argv[]) {
     printf("\n");
     graphTraversWidth(graph, 3);
 
-
-
+    printf("\n");
+    graphTraversDeep(graph, 1);
+    printf("\n");
 
     return 0;
 }
